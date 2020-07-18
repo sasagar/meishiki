@@ -81,7 +81,7 @@ if (!self.define) {
     });
   };
 }
-define("./sw.js",['./workbox-decc7022'], function (workbox) { 'use strict';
+define("./sw.js",['./workbox-8b58484f'], function (workbox) { 'use strict';
 
   /**
   * Welcome to your Workbox-powered service worker!
@@ -95,11 +95,10 @@ define("./sw.js",['./workbox-decc7022'], function (workbox) { 'use strict';
   * See https://goo.gl/2aRDsh
   */
 
-  self.addEventListener('message', event => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-      self.skipWaiting();
-    }
+  workbox.setCacheNameDetails({
+    prefix: "meishiki"
   });
+  workbox.skipWaiting();
   workbox.clientsClaim();
   /**
    * The precacheAndRoute() method efficiently caches and responds to
@@ -109,8 +108,28 @@ define("./sw.js",['./workbox-decc7022'], function (workbox) { 'use strict';
 
   workbox.precacheAndRoute([{
     "url": "js/main.js",
-    "revision": "8fb073f4c547783073a6b33ca91b4b31"
+    "revision": "ace829c59617d8426d43dc193b71459b"
   }], {});
+  workbox.registerRoute("/", new workbox.NetworkFirst({
+    "cacheName": "html",
+    "matchOptions": {
+      "ignoreSearch": true
+    },
+    plugins: [new workbox.ExpirationPlugin({
+      maxAgeSeconds: 86400,
+      purgeOnQuotaError: true
+    })]
+  }), 'GET');
+  workbox.registerRoute(/js\/[^\/\.]+\.js$/, new workbox.NetworkFirst({
+    "cacheName": "mainJs",
+    "matchOptions": {
+      "ignoreSearch": true
+    },
+    plugins: [new workbox.ExpirationPlugin({
+      maxAgeSeconds: 86400,
+      purgeOnQuotaError: true
+    })]
+  }), 'GET');
 
 });
 //# sourceMappingURL=sw.js.map
