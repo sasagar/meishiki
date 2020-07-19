@@ -108,7 +108,7 @@ define("./sw.js",['./workbox-8b58484f'], function (workbox) { 'use strict';
 
   workbox.precacheAndRoute([{
     "url": "js/main.js",
-    "revision": "6ea8fe8bd6b23f1a72ddefb3cbffa78d"
+    "revision": "37b86167603dc26b82a278a2203a476b"
   }], {});
   workbox.registerRoute("/", new workbox.NetworkFirst({
     "cacheName": "html",
@@ -116,7 +116,7 @@ define("./sw.js",['./workbox-8b58484f'], function (workbox) { 'use strict';
       "ignoreSearch": true
     },
     plugins: [new workbox.ExpirationPlugin({
-      maxAgeSeconds: 86400,
+      maxAgeSeconds: 3600,
       purgeOnQuotaError: true
     })]
   }), 'GET');
@@ -126,7 +126,7 @@ define("./sw.js",['./workbox-8b58484f'], function (workbox) { 'use strict';
       "ignoreSearch": true
     },
     plugins: [new workbox.ExpirationPlugin({
-      maxAgeSeconds: 86400,
+      maxAgeSeconds: 3600,
       purgeOnQuotaError: true
     })]
   }), 'GET');
