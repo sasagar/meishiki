@@ -108,7 +108,7 @@ define("./sw.js",['./workbox-8b58484f'], function (workbox) { 'use strict';
 
   workbox.precacheAndRoute([{
     "url": "js/main.js",
-    "revision": "64aea8d3cecb9dfb8c8f61ec64c0332e"
+    "revision": "86a781d0aee2aa0d5cf70d97d2aed6b6"
   }], {});
   workbox.registerRoute("/", new workbox.NetworkFirst({
     "cacheName": "html",
