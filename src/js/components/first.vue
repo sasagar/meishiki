@@ -58,6 +58,8 @@
 </template>
 <script>
 import { sekkiCalc } from '../modules/sekkiCalc';
+import { LongMCmp } from '../modules/longCalc';
+import sekkicalcbase from '../../json/sekkicalcbase';
 
 export default {
     name: 'First',
@@ -125,12 +127,17 @@ export default {
                 this.localYear,
                 this.localMonth - 1,
                 this.localDate,
-                0,
+                this.localHour,
                 0,
                 0
             );
+            // 時柱に計算を合わせる
+            // 1時間後ろにずらすことで対応
+            if (this.localHour == 23) {
+                destDate = destDate.setHours(destDate.getHours() + 3);
+            }
             let diffTimeDays = destDate - baseDate;
-            let diffDays = diffTimeDays / (1000 * 60 * 60 * 24);
+            let diffDays = Math.floor(diffTimeDays / (1000 * 60 * 60 * 24));
 
             this.$emit('update:diffDays', diffDays);
         },
@@ -156,7 +163,21 @@ export default {
                 if (this.risshunDate > this.localDate) {
                     this.$emit('update:calcYear', this.localYear - 1);
                 } else {
-                    this.$emit('update:calcYear', this.localYear);
+                    // 立春当日だけは時間まで判定
+                    let nyusetsuHours = LongMCmp(
+                        this.localYear,
+                        sekkicalcbase[this.localMonth]['first']['long']
+                    );
+                    // 時柱に計算を合わせる
+                    if (nyusetsuHours % 2 == 0) {
+                        nyusetsuHours -= 1;
+                    }
+
+                    if (nyusetsuHours > this.localHour) {
+                        this.$emit('update:calcYear', this.localYear - 1);
+                    } else {
+                        this.$emit('update:calcYear', this.localYear);
+                    }
                 }
             } else if (this.localMonth == 1) {
                 this.$emit('update:calcYear', this.localYear - 1);
@@ -176,7 +197,27 @@ export default {
                     this.localMonth == 1 ? 12 : this.localMonth - 1
                 );
             } else {
-                this.$emit('update:calcMonth', this.localMonth);
+                // 入節日だったら時間の判定を行う
+                if (this.localDate == tempNyusetsuDate) {
+                    let nyusetsuHours = LongMCmp(
+                        this.localYear,
+                        sekkicalcbase[this.localMonth]['first']['long']
+                    );
+                    // 時柱に時間の計算を合わせる
+                    if (nyusetsuHours % 2 == 0) {
+                        nyusetsuHours -= 1;
+                    }
+                    if (nyusetsuHours > this.localHour) {
+                        this.$emit(
+                            'update:calcMonth',
+                            this.localMonth == 1 ? 12 : this.localMonth - 1
+                        );
+                    } else {
+                        this.$emit('update:calcMonth', this.localMonth);
+                    }
+                } else {
+                    this.$emit('update:calcMonth', this.localMonth);
+                }
             }
 
             this.diffDaysCalc();
@@ -188,6 +229,8 @@ export default {
         hourFlag: function() {
             if (!this.hourFlag) {
                 this.diffHoursCalc();
+            } else {
+                this.$emit('update:hour', 12);
             }
         },
     },

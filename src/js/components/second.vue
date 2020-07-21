@@ -19,8 +19,8 @@
                     <th>天干</th>
                     <td v-if="!hourFlag">{{tengan[hourTengan]}}</td>
                     <td>{{tengan[dayTengan]}}</td>
-                    <td>{{monthtengan[calcMonth][calcYear % 10]}}</td>
-                    <td>{{tengan[(calcYear - 1864) % 10]}}</td>
+                    <td>{{monthTengan}}</td>
+                    <td>{{tengan[yearTengan]}}</td>
                 </tr>
                 <tr>
                     <th>地支</th>
@@ -30,11 +30,32 @@
                     <td>{{chishi[(calcYear - 1864) % 12]}}</td>
                 </tr>
                 <tr>
+                    <th>通変星</th>
+                    <td v-if="!hourFlag">{{hourTsuhensei}}</td>
+                    <td></td>
+                    <td>{{monthTsuhensei}}</td>
+                    <td>{{yearTsuhensei}}</td>
+                </tr>
+                <tr>
+                    <th>十二運</th>
+                    <td v-if="!hourFlag">{{hourJuniun}}</td>
+                    <td>{{dayJuniun}}</td>
+                    <td>{{monthJuniun}}</td>
+                    <td>{{yearJuniun}}</td>
+                </tr>
+                <tr>
                     <th>蔵干</th>
                     <td v-if="!hourFlag">{{hourZoukan}}</td>
                     <td>{{dayZoukan}}</td>
                     <td>{{monthZoukan}}</td>
                     <td>{{yearZoukan}}</td>
+                </tr>
+                <tr>
+                    <th>蔵干通変星</th>
+                    <td v-if="!hourFlag">{{hourTsuhensei2}}</td>
+                    <td>{{dayTsuhensei2}}</td>
+                    <td>{{monthTsuhensei2}}</td>
+                    <td>{{yearTsuhensei2}}</td>
                 </tr>
             </tbody>
         </table>
@@ -42,6 +63,8 @@
 </template>
 <script>
 import { zoukanCalc } from '../modules/zoukanCalc';
+import { tsuhenseiCalc } from '../modules/tsuhenseiCalc';
+import { juniunCalc } from '../modules/juniunCalc';
 
 export default {
     name: 'Second',
@@ -76,6 +99,12 @@ export default {
                 return diffHoursTengan;
             }
         },
+        monthTengan: function() {
+            return this.monthtengan[this.calcMonth][this.calcYear % 10];
+        },
+        yearTengan: function() {
+            return (this.calcYear - 1864) % 10;
+        },
         dayChishi: function() {
             let diffDaysChishi = this.diffDays % 12;
             if (diffDaysChishi < 0) {
@@ -107,6 +136,7 @@ export default {
                 this.year,
                 this.month,
                 this.date,
+                this.hour,
                 this.hourChishi
             );
         },
@@ -115,6 +145,7 @@ export default {
                 this.year,
                 this.month,
                 this.date,
+                this.hour,
                 this.chishi[this.dayChishi]
             );
         },
@@ -123,6 +154,7 @@ export default {
                 this.year,
                 this.month,
                 this.date,
+                this.hour,
                 this.chishi[this.monthChishi]
             );
         },
@@ -131,6 +163,55 @@ export default {
                 this.year,
                 this.month,
                 this.date,
+                this.hour,
+                this.chishi[(this.calcYear - 1864) % 12]
+            );
+        },
+        hourTsuhensei: function() {
+            return tsuhenseiCalc(
+                this.tengan[this.dayTengan],
+                this.tengan[this.hourTengan]
+            );
+        },
+        monthTsuhensei: function() {
+            return tsuhenseiCalc(this.tengan[this.dayTengan], this.monthTengan);
+        },
+        yearTsuhensei: function() {
+            return tsuhenseiCalc(
+                this.tengan[this.dayTengan],
+                this.tengan[this.yearTengan]
+            );
+        },
+        hourTsuhensei2: function() {
+            return tsuhenseiCalc(this.tengan[this.dayTengan], this.hourZoukan);
+        },
+        dayTsuhensei2: function() {
+            return tsuhenseiCalc(this.tengan[this.dayTengan], this.dayZoukan);
+        },
+        monthTsuhensei2: function() {
+            return tsuhenseiCalc(this.tengan[this.dayTengan], this.monthZoukan);
+        },
+        yearTsuhensei2: function() {
+            return tsuhenseiCalc(this.tengan[this.dayTengan], this.yearZoukan);
+        },
+        hourJuniun: function() {
+            return juniunCalc(this.tengan[this.dayTengan], this.hourChishi);
+        },
+        dayJuniun: function() {
+            return juniunCalc(
+                this.tengan[this.dayTengan],
+                this.chishi[this.dayChishi]
+            );
+        },
+        monthJuniun: function() {
+            return juniunCalc(
+                this.tengan[this.dayTengan],
+                this.chishi[this.monthChishi]
+            );
+        },
+        yearJuniun: function() {
+            return juniunCalc(
+                this.tengan[this.dayTengan],
                 this.chishi[(this.calcYear - 1864) % 12]
             );
         },

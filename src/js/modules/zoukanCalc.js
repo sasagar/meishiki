@@ -1,10 +1,13 @@
 import { sekkiCalc } from './sekkiCalc';
+import { LongMCmp } from './longCalc';
+import sekkicalcbase from '../../json/sekkicalcbase';
 
-const zoukanCalc = (year, month, day, chishi) => {
+const zoukanCalc = (year, month, day, hour, chishi) => {
     // 入節前か判定して、計算用の年月を割り出す
     let nyusetsuDay = sekkiCalc(month, 'first', year);
     let calcYear = year;
     let calcMonth = month;
+
     if (day < nyusetsuDay) {
         if (calcMonth == 1) {
             calcYear -= 1;
@@ -12,8 +15,16 @@ const zoukanCalc = (year, month, day, chishi) => {
         } else {
             calcMonth -= 1;
         }
+    } else if (day == nyusetsuDay) {
+        // 入節日だったら時間の判定を行う
+        let nyusetsuHours = LongMCmp(
+            year,
+            sekkicalcbase[month]['first']['long']
+        );
+        if (hour < nyusetsuHours) {
+            calcMonth -= 1;
+        }
     }
-    console.log(nyusetsuDay);
 
     // 対象月の入節日を計算
     // 計算用に入節日の前日を割り出す（これで入節日が1日目となる）
@@ -44,9 +55,6 @@ const zoukanCalc = (year, month, day, chishi) => {
     let calcDate = new Date(year, month - 1, day, 0, 0, 0);
     let diff = calcDate - nyusetsuDate;
     let diffDays = diff / (1000 * 60 * 60 * 24);
-    console.log(nyusetsuDate);
-    console.log(calcDate);
-    console.log(diffDays);
 
     // ここから蔵干判定
     let res;
