@@ -81,55 +81,45 @@ if (!self.define) {
     });
   };
 }
-define("./sw.js",['./workbox-8b58484f'], function (workbox) { 'use strict';
+define("./sw.js",['./workbox-4c45de27'], function (workbox) { 'use strict';
 
-  /**
-  * Welcome to your Workbox-powered service worker!
-  *
-  * You'll need to register this file in your web app.
-  * See https://goo.gl/nhQhGp
-  *
-  * The rest of the code is auto-generated. Please don't update this file
-  * directly; instead, make changes to your Workbox build configuration
-  * and re-run your build process.
-  * See https://goo.gl/2aRDsh
-  */
+	/**
+	* Welcome to your Workbox-powered service worker!
+	*
+	* You'll need to register this file in your web app.
+	* See https://goo.gl/nhQhGp
+	*
+	* The rest of the code is auto-generated. Please don't update this file
+	* directly; instead, make changes to your Workbox build configuration
+	* and re-run your build process.
+	* See https://goo.gl/2aRDsh
+	*/
 
-  workbox.setCacheNameDetails({
-    prefix: "meishiki"
-  });
-  workbox.skipWaiting();
-  workbox.clientsClaim();
-  /**
-   * The precacheAndRoute() method efficiently caches and responds to
-   * requests for URLs in the manifest.
-   * See https://goo.gl/S9QRab
-   */
-
-  workbox.precacheAndRoute([{
-    "url": "js/main.js",
-    "revision": "a9ccecc6b0b5bc0d09be801f0dbd0ca8"
-  }], {});
-  workbox.registerRoute("/", new workbox.NetworkFirst({
-    "cacheName": "html",
-    "matchOptions": {
-      "ignoreSearch": true
-    },
-    plugins: [new workbox.ExpirationPlugin({
-      maxAgeSeconds: 3600,
-      purgeOnQuotaError: true
-    })]
-  }), 'GET');
-  workbox.registerRoute(/js\/[^\/\.]+\.js$/, new workbox.NetworkFirst({
-    "cacheName": "mainJs",
-    "matchOptions": {
-      "ignoreSearch": true
-    },
-    plugins: [new workbox.ExpirationPlugin({
-      maxAgeSeconds: 3600,
-      purgeOnQuotaError: true
-    })]
-  }), 'GET');
+	workbox.setCacheNameDetails({
+	  prefix: "meishiki"
+	});
+	workbox.skipWaiting();
+	workbox.clientsClaim();
+	workbox.registerRoute("/", new workbox.NetworkFirst({
+	  "cacheName": "html",
+	  "matchOptions": {
+	    "ignoreSearch": true
+	  },
+	  plugins: [new workbox.ExpirationPlugin({
+	    maxAgeSeconds: 3600,
+	    purgeOnQuotaError: true
+	  })]
+	}), 'GET');
+	workbox.registerRoute(/js\/[^\/\.]+\.js$/, new workbox.NetworkFirst({
+	  "cacheName": "mainJs",
+	  "matchOptions": {
+	    "ignoreSearch": true
+	  },
+	  plugins: [new workbox.ExpirationPlugin({
+	    maxAgeSeconds: 3600,
+	    purgeOnQuotaError: true
+	  })]
+	}), 'GET');
 
 });
 //# sourceMappingURL=sw.js.map
