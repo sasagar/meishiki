@@ -57,17 +57,32 @@
                     <td>{{monthTsuhensei2}}</td>
                     <td>{{yearTsuhensei2}}</td>
                 </tr>
+                <tr>
+                    <th>空亡</th>
+                    <td v-if="!hourFlag">{{hourKubo}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
+        <chart></chart>
     </div>
 </template>
 <script>
 import { zoukanCalc } from '../modules/zoukanCalc';
 import { tsuhenseiCalc } from '../modules/tsuhenseiCalc';
 import { juniunCalc } from '../modules/juniunCalc';
+import { kuboCalc } from '../modules/kuboCalc';
+import { youkaninkanCalc } from '../modules/youkaninkanCalc';
+
+import Chart from './chart.vue';
 
 export default {
     name: 'Second',
+    components: {
+        Chart,
+    },
     props: {
         year: Number,
         month: Number,
@@ -81,6 +96,26 @@ export default {
         monthtengan: Object,
         diffDays: Number,
         diffHours: Number,
+    },
+    methods: {
+        kuboReturn: function(dayTengan, dayChishi, chkChishi) {
+            let youinn = kuboCalc(dayTengan, dayChishi);
+
+            if (youkaninkanCalc(dayTengan)) {
+                if (youinn['you'] == chkChishi) {
+                    return '真空';
+                } else if (youinn['inn'] == chkChishi) {
+                    return '半空';
+                }
+            } else {
+                if (youinn['you'] == chkChishi) {
+                    return '半空';
+                } else if (youinn['inn'] == chkChishi) {
+                    return '真空';
+                }
+            }
+            return '';
+        },
     },
     computed: {
         dayTengan: function() {
@@ -214,6 +249,30 @@ export default {
                 this.tengan[this.dayTengan],
                 this.chishi[(this.calcYear - 1864) % 12]
             );
+        },
+        hourKubo: function() {
+            const res = this.kuboReturn(
+                this.tengan[this.dayTengan],
+                this.chishi[this.dayChishi],
+                this.hourChishi
+            );
+            return res;
+        },
+        monthKubo: function() {
+            const res = this.kuboReturn(
+                this.tengan[this.dayTengan],
+                this.chishi[this.dayChishi],
+                this.chishi[this.monthChishi]
+            );
+            return res;
+        },
+        yearKubo: function() {
+            const res = this.kuboReturn(
+                this.tengan[this.dayTengan],
+                this.chishi[this.dayChishi],
+                this.chishi[(this.calcYear - 1864) % 12]
+            );
+            return res;
         },
     },
 };
