@@ -66,7 +66,7 @@
                 </tr>
             </tbody>
         </table>
-        <chart></chart>
+        <chart id="chart"></chart>
     </div>
 </template>
 <script>
@@ -285,5 +285,10 @@ table {
     td {
         border: solid 1px #666;
     }
+}
+
+#chart {
+    max-width: 640px;
+    background-color: #fff;
 }
 </style>
